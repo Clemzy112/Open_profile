@@ -339,3 +339,122 @@ img.src = token.logo;
 });
 
 }
+/* SEND ASSET */
+
+async function sendAsset(){
+
+try{
+
+if(!selectedSendToken){
+
+alert("No token selected");
+
+return;
+
+}
+
+const to =
+document.getElementById("sendAddress")
+.value
+.trim();
+
+const amount =
+document.getElementById("sendAmount")
+.value
+.trim();
+
+if(!to || !amount){
+
+alert("Fill all fields");
+
+return;
+
+}
+
+/* INVALID ADDRESS */
+if(
+!tronWeb.isAddress(to)
+){
+
+alert("Invalid TRON address");
+
+return;
+
+}
+
+/* TRX SEND */
+if(
+selectedSendToken === "TRX"
+){
+
+const sun =
+tronWeb.toSun(amount);
+
+const tx =
+await tronWeb.trx.sendTransaction(
+to,
+sun
+);
+
+console.log(tx);
+
+}
+
+/* TRC20 SEND */
+else{
+
+const token =
+TOKENS.find(
+t => t.symbol === selectedSendToken
+);
+
+const contract =
+await tronWeb
+.contract()
+.at(token.address);
+
+const decimals = 6;
+
+const value =
+Number(amount) *
+10**decimals;
+
+const tx =
+await contract
+.transfer(
+to,
+value
+)
+.send();
+
+console.log(tx);
+
+}
+
+/* SUCCESS */
+alert(
+selectedSendToken +
+" transaction submitted"
+);
+
+closeSendModal();
+
+/* RELOAD */
+await loadMainBalance();
+
+await loadAssetBalances();
+
+await loadTransactions();
+
+}catch(err){
+
+console.log(err);
+
+alert(
+err.message ||
+"Transaction failed"
+);
+
+}
+
+}
