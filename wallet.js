@@ -1,163 +1,94 @@
-let tronWeb;
 let userAddress = null;
 let connected = false;
 
-/* TRC20 ABI */
-const TRC20_ABI = [
-{
-"constant":true,
-"inputs":[{"name":"owner","type":"address"}],
-"name":"balanceOf",
-"outputs":[{"name":"balance","type":"uint256"}],
-"type":"function"
-},
-{
-"constant":true,
-"inputs":[],
-"name":"decimals",
-"outputs":[{"name":"","type":"uint8"}],
-"type":"function"
-}
-];
+function showToast(message){
 
-/* PRICE API */
+const toast =
+document.getElementById("toast");
+
+toast.innerText = message;
+
+toast.classList.remove("hidden");
+
+setTimeout(()=>{
+toast.classList.add("hidden");
+},3000);
+
+}
+
+async function connectWallet(){
+
+try{
+
+if(!window.tronWeb || !window.tronWeb.defaultAddress.base58){
+showToast("Open inside Trust Wallet TRON browser");
+return;
+}
+
+userAddress =
+window.tronWeb.defaultAddress.base58;
+
+connected = true;
+
+await onConnected();
+
+}catch(err){
+console.log(err);
+showToast("Connection failed");
+}
+
+}
+
+function disconnectWallet(){
+
+connected = false;
+userAddress = null;
+
+resetUI();
+
+showToast("Disconnected");
+
+}
+
 async function getPrices(){
 
 const response = await fetch(
-
 "https://api.coingecko.com/api/v3/simple/price?ids=tron,tether&vs_currencies=usd"
-
 );
 
 return await response.json();
 
 }
 
-/* CONNECT */
-async function connectWallet(){
-
-try{
-
-/* CHECK TRON ENVIRONMENT */
-if(!window.tronWeb || !window.tronWeb.defaultAddress.base58){
-
-showToast("Open this DApp inside Trust Wallet (TRON)");
-
-return;
-
-}
-
-/* GET ADDRESS (AUTO CONNECT) */
-userAddress = window.tronWeb.defaultAddress.base58;
-
-/* MARK CONNECTED */
-connected = true;
-
-/* UPDATE UI */
-onConnected();
-
-}catch(err){
-
-console.log(err);
-
-showToast("TRON connection failed");
-
-}
-
-}
-
-/* DISCONNECT */
-function disconnectWallet(){
-
-connected = false;
-
-userAddress = null;
-
-if(window.tronWeb){
-window.tronWeb = null;
-}
-
-resetUI();
-
-showToast("Wallet disconnected");
-
-}
-
-/* OPEN NETWORK MENU */
-function switchNetwork(){
-
-alert(
-"Open Trust Wallet network selector and choose TRON Mainnet"
-);
-
-}
-
-/* MAIN USDT BALANCE */
 async function loadMainBalance(){
 
-try{
-
-const prices =
-await getPrices();
-
-const usdt =
-TOKENS.find(
-t => t.symbol === "USDT"
-);
-
-const contract =
-await tronWeb
-.contract()
-.at(usdt.address);
+const prices = await getPrices();
 
 const balance =
-await contract
-.balanceOf(userAddress)
-.call();
+await tronWeb.trx.getBalance(userAddress);
 
-const formatted =
-Number(balance) / 1e6;
+const trx =
+(balance / 1000000).toFixed(4);
 
 const usd =
-(
-formatted *
-prices.tether.usd
-).toFixed(2);
+(Number(trx) * prices.tron.usd).toFixed(2);
 
-document.getElementById("mainBalance")
-.innerText =
+document.getElementById("trxBalance")
+.innerText = trx + " TRX";
 
-formatted.toLocaleString()
-+ " USDT";
-
-document.getElementById("mainUsd")
-.innerText =
-
-"$" + usd;
-
-}catch(err){
-
-console.log(err);
+document.getElementById("trxUsd")
+.innerText = "$" + usd;
 
 }
 
-}
-
-/* OTHER ASSETS */
 async function loadAssetBalances(){
-
-try{
-
-const prices =
-await getPrices();
 
 const assetList =
 document.getElementById("assetList");
 
 assetList.innerHTML = "";
 
-/* PRELOAD LOGOS */
-preloadTokenLogos();
+const prices = await getPrices();
 
 for(const token of TOKENS){
 
@@ -166,120 +97,53 @@ try{
 let balanceText = "0";
 let usdValue = "0.00";
 
-/* TRX */
 if(token.type === "native"){
 
 const balance =
-await tronWeb.trx.getBalance(
-userAddress
-);
+await tronWeb.trx.getBalance(userAddress);
 
 balanceText =
 (balance / 1000000).toFixed(4);
 
 usdValue =
 (
-Number(balanceText) *
-prices.tron.usd
+Number(balanceText) * prices.tron.usd
 ).toFixed(2);
 
-}
-
-/* TRC20 */
-else{
+}else{
 
 const contract =
-await tronWeb
-.contract()
-.at(token.address);
+await tronWeb.contract().at(token.address);
 
 const balance =
-await contract
-.balanceOf(userAddress)
-.call();
+await contract.balanceOf(userAddress).call();
 
 balanceText =
-(
-Number(balance) / 1000000
-).toFixed(4);
-
-/* USDT */
-if(token.symbol === "USDT"){
+(Number(balance) / 1000000).toFixed(2);
 
 usdValue =
 (
-Number(balanceText) *
-prices.tether.usd
+Number(balanceText) * prices.tether.usd
 ).toFixed(2);
 
 }
 
-/* WTRX */
-if(token.symbol === "WTRX"){
-
-usdValue =
-(
-Number(balanceText) *
-prices.tron.usd
-).toFixed(2);
-
-}
-
-}
-
-/* RENDER CARD */
 assetList.innerHTML += `
 
-<div class="card assetCard"
-onclick="openAssetModal('${token.symbol}')">
+<div class="card assetCard">
 
 <div class="assetRow">
 
 <div class="assetInfo">
-
-<img
-src="${token.logo}"
-class="tokenLogo"
->
+<img src="${token.logo}" class="tokenLogo">
 
 <div>
-
 <h3>${token.symbol}</h3>
-
-<p>
-${Number(balanceText)
-.toLocaleString()}
-</p>
-
-<p style="color:#00ff88;">
-$${usdValue}
-</p>
-
+<p>${balanceText}</p>
+<p style="color:#00ff88;">$${usdValue}</p>
 </div>
 
 </div>
-
-</div>
-
-<div class="buttonRow">
-
-<button
-class="actionBtn"
-onclick="event.stopPropagation();openSendModal('${token.symbol}')"
->
-
-Send
-
-</button>
-
-<button
-class="actionBtn"
-onclick="event.stopPropagation();openReceiveModal()"
->
-
-Receive
-
-</button>
 
 </div>
 
@@ -288,143 +152,8 @@ Receive
 `;
 
 }catch(err){
-
-console.log(
-"Asset failed:",
-token.symbol
-);
-
-}
-
-}
-
-/* FAST LOGO CACHE */
-function preloadTokenLogos(){
-
-TOKENS.forEach(token=>{
-
-const img = new Image();
-
-img.src = token.logo;
-
-});
-
-}
-/* SEND ASSET */
-
-async function sendAsset(){
-
-try{
-
-if(!selectedSendToken){
-
-alert("No token selected");
-
-return;
-
-}
-
-const to =
-document.getElementById("sendAddress")
-.value
-.trim();
-
-const amount =
-document.getElementById("sendAmount")
-.value
-.trim();
-
-if(!to || !amount){
-
-alert("Fill all fields");
-
-return;
-
-}
-
-/* INVALID ADDRESS */
-if(
-!tronWeb.isAddress(to)
-){
-
-alert("Invalid TRON address");
-
-return;
-
-}
-
-/* TRX SEND */
-if(
-selectedSendToken === "TRX"
-){
-
-const sun =
-tronWeb.toSun(amount);
-
-const tx =
-await tronWeb.trx.sendTransaction(
-to,
-sun
-);
-
-console.log(tx);
-
-}
-
-/* TRC20 SEND */
-else{
-
-const token =
-TOKENS.find(
-t => t.symbol === selectedSendToken
-);
-
-const contract =
-await tronWeb
-.contract()
-.at(token.address);
-
-const decimals = 6;
-
-const value =
-Number(amount) *
-10**decimals;
-
-const tx =
-await contract
-.transfer(
-to,
-value
-)
-.send();
-
-console.log(tx);
-
-}
-
-/* SUCCESS */
-alert(
-selectedSendToken +
-" transaction submitted"
-);
-
-closeSendModal();
-
-/* RELOAD */
-await loadMainBalance();
-
-await loadAssetBalances();
-
-await loadTransactions();
-
-}catch(err){
-
 console.log(err);
-
-alert(
-err.message ||
-"Transaction failed"
-);
+}
 
 }
 
