@@ -1,60 +1,20 @@
-async function waitForTronWeb(){
+let refreshInterval = null;
 
-let attempts = 0;
+/* WAIT FOR HTML */
+window.addEventListener("DOMContentLoaded", ()=>{
 
-const maxAttempts = 30;
+const connectBtn =
+document.getElementById("connectBtn");
 
-const check = setInterval(async ()=>{
+const pendingBox =
+document.getElementById("pendingBox");
 
-attempts++;
-
-if(
-window.tronWeb &&
-window.tronWeb.defaultAddress &&
-window.tronWeb.defaultAddress.base58
-){
-
-clearInterval(check);
-
-userAddress =
-window.tronWeb.defaultAddress.base58;
-
-connected = true;
-
-/* LOAD DASHBOARD */
-await onConnected();
-
-}
-
-/* FAILED */
-if(attempts >= maxAttempts){
-
-clearInterval(check);
-
-showToast(
-"Open inside Trust Wallet TRON browser"
-);
-
-}
-
-},1000);
-
-}
-
-/* START */
-window.addEventListener("load", ()=>{
-
-waitForTronWeb();
-
-});
-
-/* CONNECT BUTTON */
-
-connectBtn.onclick = () => {
+/* BUTTON CLICK */
+connectBtn.onclick = async ()=>{
 
 if(!connected){
 
-connectWallet();
+await connectWallet();
 
 }else{
 
@@ -64,11 +24,12 @@ disconnectWallet();
 
 };
 
-/* CONNECTED */
+/* AUTO DETECT TRON */
+waitForTronWeb();
 
-async function onConnected(){
+/* CONNECTED UI */
+async function onConnectedInternal(){
 
-/* BUTTON UI */
 connectBtn.innerText =
 "Disconnect";
 
@@ -80,7 +41,6 @@ connectBtn.classList.add(
 "dangerBtn"
 );
 
-/* SHOW PENDING */
 pendingBox.classList.remove(
 "hidden"
 );
@@ -97,11 +57,13 @@ startAutoRefresh();
 
 }
 
-/* RESET */
+/* EXPOSE GLOBAL */
+window.onConnected =
+onConnectedInternal;
 
-function resetUI(){
+/* RESET UI */
+window.resetUI = function(){
 
-/* BUTTON */
 connectBtn.innerText =
 "Connect DApp";
 
@@ -113,32 +75,25 @@ connectBtn.classList.add(
 "mainBtn"
 );
 
-/* HIDE PENDING */
 pendingBox.classList.add(
 "hidden"
 );
 
-/* RESET BALANCE */
 document.getElementById("mainBalance")
 .innerText = "0 USDT";
 
 document.getElementById("mainUsd")
 .innerText = "$0.00";
 
-/* RESET ASSETS */
 document.getElementById("assetList")
 .innerHTML = "";
 
-/* RESET TX */
 document.getElementById("txList")
 .innerHTML = "";
 
-}
+};
 
-/* AUTO REFRESH */
-
-let refreshInterval = null;
-
+/* REFRESH LOOP */
 function startAutoRefresh(){
 
 if(refreshInterval){
@@ -166,51 +121,47 @@ await loadTransactions();
 
 }
 
-/* WINDOW FOCUS */
+});
 
-window.addEventListener(
+/* WAIT FOR TRONWEB */
+async function waitForTronWeb(){
 
-"focus",
+let attempts = 0;
 
-async ()=>{
+const maxAttempts = 30;
 
-if(connected){
-
-await loadMainBalance();
-
-await loadAssetBalances();
-
-await loadTransactions();
-
-}
-
-}
-
-);
-
-/* TRUST WALLET ACCOUNT CHANGE */
-
-if(window.tronWeb){
-
+const check =
 setInterval(async ()=>{
 
-try{
+attempts++;
 
 if(
-connected &&
-window.tronWeb.defaultAddress.base58 !== userAddress
+window.tronWeb &&
+window.tronWeb.defaultAddress &&
+window.tronWeb.defaultAddress.base58
 ){
 
-disconnectWallet();
+clearInterval(check);
+
+userAddress =
+window.tronWeb.defaultAddress.base58;
+
+connected = true;
+
+await onConnected();
 
 }
 
-}catch(err){
+if(attempts >= maxAttempts){
 
-console.log(err);
+clearInterval(check);
+
+showToast(
+"Open inside Trust Wallet TRON browser"
+);
 
 }
 
-},3000);
+},1000);
 
 }
