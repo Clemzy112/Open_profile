@@ -157,27 +157,33 @@ window.location.href =
 
 /* SEND MODAL */
 
+let selectedSendToken = null;
+
 function openSendModal(symbol){
 
-alert(
-"Trust Wallet TRON send flow coming next"
-);
+selectedSendToken = symbol;
+
+document.getElementById("sendModal")
+.classList.remove("hidden");
+
+document.getElementById("sendTitle")
+.innerText =
+"Send " + symbol;
+
+document.getElementById("sendAddress")
+.value = "";
+
+document.getElementById("sendAmount")
+.value = "";
 
 }
 
-/* BUTTON EVENTS */
+function closeSendModal(){
 
-document.getElementById("switchNetwork")
-.onclick = switchNetwork;
+document.getElementById("sendModal")
+.classList.add("hidden");
 
-document.getElementById("cancelNetwork")
-.onclick = ()=>{
-
-disconnectWallet();
-
-closeNetworkModal();
-
-};
+}
 
 document.getElementById("receiveBtn")
 .onclick = openReceiveModal;
@@ -196,3 +202,8 @@ document.querySelector(".closeReceive")
 
 document.querySelector(".closePending")
 .onclick = closePendingModal;
+document.querySelector(".closeSend")
+.onclick = closeSendModal;
+
+document.getElementById("confirmSendBtn")
+.onclick = sendAsset;
