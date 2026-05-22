@@ -76,6 +76,61 @@ class="tokenLogo"
 <span>Awaiting Confirmation...</span>
 </div>
 
+<button
+id="viewPendingBtn"
+class="mainBtn"
+style="margin-top:15px;width:100%;"
+>
+View Details
+</button>
+
+</div>
+
+<!-- PENDING MODAL -->
+<div id="pendingModal" class="modal hidden">
+
+<div class="modalContent">
+
+<button id="closePending" class="backBtn">
+Back
+</button>
+
+<div class="assetInfo">
+
+<img
+src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/assets/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t/logo.png"
+class="tokenLogo"
+>
+
+<div>
+<h2>Pending USDT</h2>
+<p>Demo Pending State</p>
+</div>
+
+</div>
+
+<div class="pendingRow">
+<div class="spinLoader"></div>
+<span>Awaiting Confirmation...</span>
+</div>
+
+<p style="margin-top:20px;">
+Amount: 250 USDT
+</p>
+
+<p style="opacity:0.7;word-break:break-all;">
+Sender: TDemoAddressExample123
+</p>
+
+</div>
+
+</div>
+
+<div class="pendingRow">
+<div class="spinLoader"></div>
+<span>Awaiting Confirmation...</span>
+</div>
+
 </div>
 
 <h2 class="sectionTitle">Assets</h2>
@@ -83,11 +138,19 @@ class="tokenLogo"
 
 <h2 class="sectionTitle">Live Chart</h2>
 
-<div class="chartWrap">
-<iframe
-src="https://www.dextools.io/app/en/tron"
-id="chartFrame"
-></iframe>
+<div class="card">
+
+<p>
+Open live TRON market chart
+</p>
+
+<button
+id="openChartBtn"
+class="mainBtn"
+>
+Open Chart
+</button>
+
 </div>
 
 <h2 class="sectionTitle">Transactions</h2>
