@@ -1,31 +1,52 @@
-window.addEventListener("load", () => {
+async function waitForTronWeb(){
 
-setTimeout(() => {
+let attempts = 0;
 
-if(window.tronWeb && window.tronWeb.defaultAddress.base58){
+const maxAttempts = 30;
+
+const check = setInterval(async ()=>{
+
+attempts++;
+
+if(
+window.tronWeb &&
+window.tronWeb.defaultAddress &&
+window.tronWeb.defaultAddress.base58
+){
+
+clearInterval(check);
 
 userAddress =
 window.tronWeb.defaultAddress.base58;
 
 connected = true;
 
-onConnected();
+/* LOAD DASHBOARD */
+await onConnected();
 
-}else{
+}
+
+/* FAILED */
+if(attempts >= maxAttempts){
+
+clearInterval(check);
 
 showToast(
-"Open in Trust Wallet TRON browser"
+"Open inside Trust Wallet TRON browser"
 );
 
 }
 
-},500);
+},1000);
 
-});const connectBtn =
-document.getElementById("connectBtn");
+}
 
-const pendingBox =
-document.getElementById("pendingBox");
+/* START */
+window.addEventListener("load", ()=>{
+
+waitForTronWeb();
+
+});
 
 /* CONNECT BUTTON */
 
