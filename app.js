@@ -1,5 +1,7 @@
 window.addEventListener("DOMContentLoaded", ()=>{
 
+try{
+
 const connectBtn =
 document.getElementById("connectBtn");
 
@@ -11,6 +13,10 @@ document.getElementById("closeReceive");
 
 const copyBtn =
 document.getElementById("copyBtn");
+
+if(!connectBtn){
+return;
+}
 
 const pendingBox =
 document.getElementById("pendingBox");
@@ -59,10 +65,7 @@ document.getElementById("pendingModal")
 
 openChartBtn.onclick = ()=>{
 
-window.open(
-"https://www.dextools.io/app/en/tron",
-"_blank"
-);
+location.href = "https://www.dextools.io/app/en/tron";
 
 };
 
@@ -111,5 +114,11 @@ await onConnected();
 }
 
 },1500);
+
+
+}catch(err){
+console.log(err);
+alert("App initialization failed");
+}
 
 });
