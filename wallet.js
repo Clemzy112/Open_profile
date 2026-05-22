@@ -20,8 +20,13 @@ async function connectWallet(){
 
 try{
 
-if(!window.tronWeb || !window.tronWeb.defaultAddress.base58){
-showToast("Open inside Trust Wallet TRON browser");
+if(!window.tronWeb){
+showToast("TRON wallet not detected");
+return;
+}
+
+if(!window.tronWeb.defaultAddress.base58){
+showToast("Unlock wallet and reopen DApp");
 return;
 }
 
