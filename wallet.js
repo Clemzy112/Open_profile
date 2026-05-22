@@ -161,6 +161,8 @@ preloadTokenLogos();
 
 for(const token of TOKENS){
 
+try{
+
 let balanceText = "0";
 let usdValue = "0.00";
 
@@ -173,8 +175,7 @@ userAddress
 );
 
 balanceText =
-(balance / 1e6)
-.toFixed(4);
+(balance / 1000000).toFixed(4);
 
 usdValue =
 (
@@ -199,7 +200,7 @@ await contract
 
 balanceText =
 (
-Number(balance) / 1e6
+Number(balance) / 1000000
 ).toFixed(4);
 
 /* USDT */
@@ -226,6 +227,7 @@ prices.tron.usd
 
 }
 
+/* RENDER CARD */
 assetList.innerHTML += `
 
 <div class="card assetCard"
@@ -238,7 +240,6 @@ onclick="openAssetModal('${token.symbol}')">
 <img
 src="${token.logo}"
 class="tokenLogo"
-onload="this.classList.add('loaded')"
 >
 
 <div>
@@ -251,9 +252,7 @@ ${Number(balanceText)
 </p>
 
 <p style="color:#00ff88;">
-
 $${usdValue}
-
 </p>
 
 </div>
@@ -269,10 +268,6 @@ class="actionBtn"
 onclick="event.stopPropagation();openSendModal('${token.symbol}')"
 >
 
-<svg viewBox="0 0 24 24">
-<path d="M2 21l21-9L2 3v7l15 2-15 2z"></path>
-</svg>
-
 Send
 
 </button>
@@ -281,10 +276,6 @@ Send
 class="actionBtn"
 onclick="event.stopPropagation();openReceiveModal()"
 >
-
-<svg viewBox="0 0 24 24">
-<path d="M12 2v14m0 0l-5-5m5 5l5-5"></path>
-</svg>
 
 Receive
 
@@ -296,11 +287,12 @@ Receive
 
 `;
 
-}
-
 }catch(err){
 
-console.log(err);
+console.log(
+"Asset failed:",
+token.symbol
+);
 
 }
 
