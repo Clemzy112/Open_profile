@@ -1,4 +1,27 @@
-const connectBtn =
+window.addEventListener("load", () => {
+
+setTimeout(() => {
+
+if(window.tronWeb && window.tronWeb.defaultAddress.base58){
+
+userAddress =
+window.tronWeb.defaultAddress.base58;
+
+connected = true;
+
+onConnected();
+
+}else{
+
+showToast(
+"Open in Trust Wallet TRON browser"
+);
+
+}
+
+},500);
+
+});const connectBtn =
 document.getElementById("connectBtn");
 
 const pendingBox =
@@ -6,15 +29,11 @@ document.getElementById("pendingBox");
 
 /* CONNECT BUTTON */
 
-connectBtn.addEventListener(
-
-"click",
-
-async ()=>{
+connectBtn.onclick = () => {
 
 if(!connected){
 
-await connectWallet();
+connectWallet();
 
 }else{
 
@@ -22,9 +41,7 @@ disconnectWallet();
 
 }
 
-}
-
-);
+};
 
 /* CONNECTED */
 
