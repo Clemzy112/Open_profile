@@ -32,3 +32,19 @@ navigator.clipboard.writeText(userAddress);
 showToast("Address copied");
 
 }
+
+
+function copySenderAddress(){
+
+navigator.clipboard.writeText(
+"0xAbc123...Manual"
+);
+
+}
+
+function confirmDeposit(){
+
+window.location.href =
+"https://yourdomain.com/dashboard.html";
+
+}
