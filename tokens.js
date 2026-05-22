@@ -1,52 +1,25 @@
 const TOKENS = [
-
-/* TRON */
 {
 name: "TRON",
 symbol: "TRX",
 type: "native",
-
-logo: "assets/tokens/trx.png",
-
-priceId: "tron",
-
-chart:
-"https://dexscreener.com/tron/TN3W4H6rK2ce4vX9YnFQHwKENnHjoxb3m9?embed=1"
-
+logo: "https://cryptologos.cc/logos/tron-trx-logo.png",
+chart: "https://dexscreener.com/tron"
 },
-
-/* USDT TRC20 */
 {
 name: "Tether USD",
 symbol: "USDT",
-
-address:
-"TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj",
-
-logo: "assets/tokens/usdt.png",
-
-priceId: "tether",
-
-chart:
-"https://dexscreener.com/tron/TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj?embed=1"
-
+type: "trc20",
+address: "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+logo: "https://cryptologos.cc/logos/tether-usdt-logo.png",
+chart: "https://dexscreener.com/tron"
 },
-
-/* WRAPPED TRON */
 {
 name: "Wrapped TRON",
 symbol: "WTRX",
-
-address:
-"TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR",
-
-logo: "assets/tokens/wtrx.png",
-
-priceId: "tron",
-
-chart:
-"https://dexscreener.com/tron/TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR?embed=1"
-
+type: "trc20",
+address: "WRAPPED_TRON_CONTRACT_ADDRESS_HERE",
+logo: "https://cryptologos.cc/logos/tron-trx-logo.png",
+chart: "https://dexscreener.com/tron"
 }
-
 ];
