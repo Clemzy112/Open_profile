@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>TRON Wallet Dashboard</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- TRONWEB -->
+<script src="https://cdn.jsdelivr.net/npm/tronweb/dist/TronWeb.js"></script>
+
+<!-- FAST QR -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+<!-- CACHE -->
+<meta http-equiv="Cache-Control" content="max-age=31536000, immutable">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- TOPBAR -->
+<div class="topbar">
+
+<button id="connectBtn" class="mainBtn">
+Connect DApp
+</button>
+
+</div>
+
+<!-- NETWORK MODAL -->
+<div id="networkModal" class="modal hidden">
+
+<div class="modalContent">
+
+<h2>Wrong Network Selected</h2>
+
+<p>
+Switch wallet to TRON Mainnet
+</p>
+
+<div class="modalActions">
+
+<button id="cancelNetwork" class="dangerBtn">
+Cancel
+</button>
+
+<button id="switchNetwork" class="mainBtn">
+Open Wallet Network
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MAIN USDT TRC20 -->
+<div class="card">
+
+<div class="assetRow">
+
+<div class="assetInfo">
+
+<img
+src="assets/tokens/usdt.png"
+class="tokenLogo"
+>
+
+<div>
+
+<h3>USDT TRC20</h3>
+
+<p>
+Current USDT Balance
+</p>
+
+</div>
+
+</div>
+
+<div>
+
+<h3 id="mainUsd">
+$0.00
+</h3>
+
+</div>
+
+</div>
+
+<h1 id="mainBalance">
+0 USDT
+</h1>
+
+<!-- ACTIONS -->
+<div class="buttonRow">
+
+<button class="actionBtn" id="sendBtn">
+
+<svg viewBox="0 0 24 24">
+<path d="M2 21l21-9L2 3v7l15 2-15 2z"></path>
+</svg>
+
+Send
+
+</button>
+
+<button class="actionBtn" id="receiveBtn">
+
+<svg viewBox="0 0 24 24">
+<path d="M12 2v14m0 0l-5-5m5 5l5-5"></path>
+</svg>
+
+Receive
+
+</button>
+
+</div>
+
+</div>
+
+<!-- PENDING -->
+<div id="pendingBox" class="card hidden pendingCard">
+
+<div class="assetInfo">
+
+<img
+src="assets/tokens/usdt.png"
+class="tokenLogo"
+>
+
+<div>
+
+<h3>Pending USDT</h3>
+
+<p>
+1000 USDT Incoming
+</p>
+
+</div>
+
+</div>
+
+<div class="pendingStatus">
+
+<div class="spinLoader"></div>
+
+<span>
+Awaiting Approval...
+</span>
+
+</div>
+
+<button id="viewPending" class="mainBtn">
+View Details
+</button>
+
+</div>
+
+<!-- OTHER ASSETS -->
+<h2 class="sectionTitle">
+Other Assets
+</h2>
+
+<div id="assetList"></div>
+
+<!-- TX -->
+<h2 class="sectionTitle">
+Transaction History
+</h2>
+
+<div id="txList"></div>
+
+</div>
+
+<!-- RECEIVE MODAL -->
+<div id="receiveModal" class="modal hidden">
+
+<div class="modalContent">
+
+<button class="backBtn closeReceive">
+
+<svg viewBox="0 0 24 24">
+<path d="M15 18l-6-6 6-6"></path>
+</svg>
+
+Back
+
+</button>
+
+<h2>
+Receive Asset
+</h2>
+
+<div class="qrWrap">
+
+<div id="qrCode"></div>
+
+</div>
+
+<p id="walletAddress"></p>
+
+<button id="copyAddress" class="mainBtn">
+Copy Address
+</button>
+
+</div>
+
+</div>
+
+<!-- ASSET MODAL -->
+<div id="assetModal" class="modal hidden">
+
+<div class="modalContent">
+
+<button class="backBtn closeAsset">
+
+<svg viewBox="0 0 24 24">
+<path d="M15 18l-6-6 6-6"></path>
+</svg>
+
+Back
+
+</button>
+
+<h2 id="assetTitle"></h2>
+
+<iframe id="chartFrame"></iframe>
+
+<div id="assetTransactions"></div>
+
+</div>
+
+</div>
+
+<!-- PENDING MODAL -->
+<div id="pendingModal" class="modal hidden">
+
+<div class="modalContent">
+
+<button class="backBtn closePending">
+
+<svg viewBox="0 0 24 24">
+<path d="M15 18l-6-6 6-6"></path>
+</svg>
+
+Back
+
+</button>
+
+<div class="assetInfo">
+
+<img
+src="assets/tokens/usdt.png"
+class="tokenLogo"
+>
+
+<div>
+
+<h2>Pending USDT</h2>
+
+<p>
+Awaiting Confirmation
+</p>
+
+</div>
+
+</div>
+
+<div class="pendingStatus">
+
+<div class="spinLoader"></div>
+
+<span>
+Awaiting Approval...
+</span>
+
+</div>
+
+<p>
+Amount: 1000 USDT
+</p>
+
+<div class="senderWrap">
+
+<span id="senderAddress">
+TXxxxxxManualAddress
+</span>
+
+<button
+class="copyIconBtn"
+onclick="copySenderAddress()"
+>
+
+<svg viewBox="0 0 24 24">
+<path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"></path>
+</svg>
+
+</button>
+
+</div>
+
+<button
+class="mainBtn"
+onclick="confirmDeposit()"
+>
+
+Confirm Deposit
+
+</button>
+
+</div>
+
+</div>
+<!-- SEND MODAL -->
+<div id="sendModal" class="modal hidden">
+
+<div class="modalContent">
+
+<button class="backBtn closeSend">
+
+<svg viewBox="0 0 24 24">
+<path d="M15 18l-6-6 6-6"></path>
+</svg>
+
+Back
+
+</button>
+
+<h2 id="sendTitle">
+Send Asset
+</h2>
+
+<input
+type="text"
+id="sendAddress"
+placeholder="Recipient Address"
+>
+
+<input
+type="number"
+id="sendAmount"
+placeholder="Amount"
+>
+
+<button
+id="confirmSendBtn"
+class="mainBtn"
+>
+
+Send Now
+
+</button>
+
+</div>
+
+</div>
+<!-- FILES -->
+<script src="tokens.js"></script>
+<script src="wallet.js"></script>
+<script src="transactions.js"></script>
+<script src="modals.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
