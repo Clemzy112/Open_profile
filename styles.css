@@ -129,12 +129,9 @@ margin-bottom:15px;
 }
 
 iframe{
-width:100%;
-height:420px;
-border:none;
-border-radius:12px;
-margin-top:10px;
 background:#111;
+min-height:420px;
+-webkit-overflow-scrolling:touch;
 }
 
 .qrWrap{
