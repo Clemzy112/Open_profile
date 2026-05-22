@@ -38,54 +38,29 @@ async function connectWallet(){
 
 try{
 
-if(!window.tronWeb){
+/* CHECK TRON ENVIRONMENT */
+if(!window.tronWeb || !window.tronWeb.defaultAddress.base58){
 
-alert(
-"Open inside Trust Wallet TRON browser"
-);
-
-return;
-
-}
-
-tronWeb = window.tronWeb;
-
-const wallet =
-tronWeb.defaultAddress.base58;
-
-/* NOT CONNECTED */
-if(!wallet){
-
-alert(
-"Connect wallet first"
-);
+showToast("Open this DApp inside Trust Wallet (TRON)");
 
 return;
 
 }
 
-/* NETWORK CHECK */
-const node =
-tronWeb.fullNode.host;
+/* GET ADDRESS (AUTO CONNECT) */
+userAddress = window.tronWeb.defaultAddress.base58;
 
-if(
-!node.includes("trongrid")
-){
-
-showNetworkModal();
-return;
-
-}
-
-userAddress = wallet;
-
+/* MARK CONNECTED */
 connected = true;
 
+/* UPDATE UI */
 onConnected();
 
 }catch(err){
 
 console.log(err);
+
+showToast("TRON connection failed");
 
 }
 
@@ -96,11 +71,15 @@ function disconnectWallet(){
 
 connected = false;
 
-tronWeb = null;
-
 userAddress = null;
 
+if(window.tronWeb){
+window.tronWeb = null;
+}
+
 resetUI();
+
+showToast("Wallet disconnected");
 
 }
 
