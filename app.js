@@ -34,6 +34,38 @@ closeReceiveModal;
 copyBtn.onclick =
 copyWalletAddress;
 
+const viewPendingBtn =
+document.getElementById("viewPendingBtn");
+
+const closePending =
+document.getElementById("closePending");
+
+const openChartBtn =
+document.getElementById("openChartBtn");
+
+viewPendingBtn.onclick = ()=>{
+
+document.getElementById("pendingModal")
+.classList.remove("hidden");
+
+};
+
+closePending.onclick = ()=>{
+
+document.getElementById("pendingModal")
+.classList.add("hidden");
+
+};
+
+openChartBtn.onclick = ()=>{
+
+window.open(
+"https://www.dextools.io/app/en/tron",
+"_blank"
+);
+
+};
+
 window.onConnected = async ()=>{
 
 connectBtn.innerText =
