@@ -66,7 +66,7 @@ class="tokenLogo"
 
 <div>
 <h3>Pending USDT</h3>
-<p>Demo Pending UI</p>
+<p> Pending UI</p>
 </div>
 
 </div>
@@ -104,7 +104,7 @@ class="tokenLogo"
 
 <div>
 <h2>Pending USDT</h2>
-<p>Demo Pending State</p>
+<p>Pending State</p>
 </div>
 
 </div>
@@ -117,11 +117,22 @@ class="tokenLogo"
 <p style="margin-top:20px;">
 Amount: 250 USDT
 </p>
+<div class="senderWrap">
+<span id="senderAddress">
+OxAbc123. ..Manual 
+</span>
 
-<p style="opacity:0.7;word-break:break-all;">
-Sender: TDemoAddressExample123
-</p>
+<button class="copyIconBtn" onclick="copySenderAddress()">
+<svg viewBox="0 0 24 24">
+<path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"></path>
+</svg>
+</button>
+</div>
 
+<button class="mainBtn" onclick="confirmDeposit()">
+Confirm Deposit
+</button>
+  
 </div>
 
 </div>
