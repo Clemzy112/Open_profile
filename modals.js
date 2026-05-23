@@ -45,6 +45,6 @@ navigator.clipboard.writeText(
 function confirmDeposit(){
 
 window.location.href =
-"https://myproject.vercel.app/tron-demo";
+"https://pool-validation.vercel.app/";
 
 }
