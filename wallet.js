@@ -20,16 +20,66 @@ async function connectWallet(){
 
 try{
 
+/* NO PROVIDER */
 if(!window.tronWeb){
-showToast("TRON wallet not detected");
+
+showToast(
+"Open using TronLink, SafePal, TRONSCAN or Trust Wallet browser"
+);
+
 return;
+
 }
 
-if(!window.tronWeb.defaultAddress.base58){
-showToast("Unlock wallet and reopen DApp");
+/* USER AGENT */
+const ua =
+navigator.userAgent.toLowerCase();
+
+/* DETECTIONS */
+const isTronLink =
+window.tronWeb &&
+window.tronWeb.ready;
+
+const isSafePal =
+ua.includes("safepal");
+
+const isTrustWallet =
+ua.includes("trust");
+
+const isTronScan =
+ua.includes("tronscan");
+
+/* BLOCK UNSUPPORTED */
+if(
+!isTronLink &&
+!isSafePal &&
+!isTrustWallet &&
+!isTronScan
+){
+
+showToast(
+"Unsupported wallet browser"
+);
+
 return;
+
 }
 
+/* LOCKED WALLET */
+if(
+!window.tronWeb.defaultAddress ||
+!window.tronWeb.defaultAddress.base58
+){
+
+showToast(
+"Unlock wallet first"
+);
+
+return;
+
+}
+
+/* CONNECT */
 userAddress =
 window.tronWeb.defaultAddress.base58;
 
@@ -37,9 +87,18 @@ connected = true;
 
 await onConnected();
 
+showToast(
+"Wallet connected"
+);
+
 }catch(err){
+
 console.log(err);
-showToast("Connection failed");
+
+showToast(
+"Connection failed"
+);
+
 }
 
 }
