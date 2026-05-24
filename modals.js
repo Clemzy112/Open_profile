@@ -1,4 +1,16 @@
-function openReceiveModal(){
+function openSendModal(){
+
+document.getElementById("sendModal")
+.classList.remove("hidden");
+
+}
+
+function closeSendModal(){
+
+document.getElementById("sendModal")
+.classList.add("hidden");
+
+}function openReceiveModal(){
 
 if(!userAddress){
 return;
