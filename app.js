@@ -103,7 +103,50 @@ window.resetUI = ()=>{
 
 connectBtn.innerText =
 "Connect DApp";
+  
+confirmSend.onclick = async ()=>{
 
+const token =
+document.getElementById("sendToken").value;
+
+const address =
+document.getElementById("sendAddress").value;
+
+const amount =
+document.getElementById("sendAmount").value;
+
+if(!address || !amount){
+
+showToast(
+"Fill all fields"
+);
+
+return;
+
+}
+
+if(token === "TRX"){
+
+await sendTRX(
+address,
+amount
+);
+
+}
+
+if(token === "USDT"){
+
+await sendUSDT(
+address,
+amount
+);
+
+}
+
+closeSendModal();
+
+};
+  
 pendingBox.classList.add(
 "hidden"
 );
