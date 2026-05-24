@@ -4,7 +4,13 @@ try{
 
 const connectBtn =
 document.getElementById("connectBtn");
+const closeSend =
+  
+document.getElementById("closeSend");
 
+const confirmSend =
+document.getElementById("confirmSend");
+  
 const receiveBtn =
 document.getElementById("receiveBtn");
 
@@ -30,7 +36,16 @@ disconnectWallet();
 }
 
 };
+document.querySelectorAll(".actionBtn")
+.forEach(btn=>{
 
+btn.onclick = openSendModal;
+
+});
+
+closeSend.onclick =
+closeSendModal;
+  
 receiveBtn.onclick =
 openReceiveModal;
 
