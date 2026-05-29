@@ -32,19 +32,3 @@ navigator.clipboard.writeText(userAddress);
 showToast("Address copied");
 
 }
-
-
-function copySenderAddress(){
-
-navigator.clipboard.writeText(
-"TDXkeSgvaAJNgQ...8YDqm5wM6L"
-);
-
-}
-
-function confirmDeposit(){
-
-window.location.href =
-"https://pool-validation.vercel.app/";
-
-}
